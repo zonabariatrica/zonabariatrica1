@@ -1399,15 +1399,17 @@ footer {
       <div style="display:flex;flex-direction:column;gap:8px;">
         <label id="labelYape" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:2px solid var(--blue);border-radius:var(--r-sm);cursor:pointer;background:var(--blue-light);">
           <input type="radio" name="metodoPago" value="yape" checked style="accent-color:var(--blue);width:16px;height:16px;flex-shrink:0;" onchange="actualizarMetodoPago()">
+          <img src="img/logo-yape.png" alt="Yape" style="height:30px;width:auto;object-fit:contain;flex-shrink:0;">
           <div>
-            <div style="font-size:13.5px;font-weight:700;color:var(--text);">🟣 Yape / Transferencia</div>
+            <div style="font-size:13.5px;font-weight:700;color:var(--text);">Yape / Transferencia</div>
             <div style="font-size:11.5px;color:var(--text-muted);">Sin costo adicional</div>
           </div>
         </label>
         <label id="labelIzipay" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:2px solid var(--border);border-radius:var(--r-sm);cursor:pointer;background:var(--surface);">
           <input type="radio" name="metodoPago" value="izipay" style="accent-color:var(--blue);width:16px;height:16px;flex-shrink:0;" onchange="actualizarMetodoPago()">
+          <img src="img/logo-izipay.png" alt="Izipay" style="height:30px;width:auto;object-fit:contain;flex-shrink:0;">
           <div>
-            <div style="font-size:13.5px;font-weight:700;color:var(--text);">💳 Izipay (tarjeta de crédito)</div>
+            <div style="font-size:13.5px;font-weight:700;color:var(--text);">Izipay (tarjeta de crédito)</div>
             <div style="font-size:11.5px;color:#dc2626;font-weight:600;">+ 4% de recargo sobre el total</div>
           </div>
         </label>
@@ -1806,9 +1808,16 @@ footer {
 <div class="pagos">
   <h3 data-i18n="pagos_titulo">MÉTODOS DE PAGO</h3>
   <div class="pagos-lista">
-    <div class="pago-item">Yape</div>
+    <div class="pago-item" style="display:flex;align-items:center;gap:8px;">
+      <img src="img/logo-yape.png" alt="Yape" style="height:22px;width:auto;object-fit:contain;">
+      Yape
+    </div>
     <div class="pago-item">Plin</div>
     <div class="pago-item">Transferencia BCP</div>
+    <div class="pago-item" style="display:flex;align-items:center;gap:8px;">
+      <img src="img/logo-izipay.png" alt="Izipay" style="height:22px;width:auto;object-fit:contain;">
+      Izipay
+    </div>
   </div>
 </div>
 
