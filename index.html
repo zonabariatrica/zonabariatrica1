@@ -1105,6 +1105,11 @@ footer {
   .slide-title { font-size: 17px; }
   .slide-sub { font-size: 12px; }
   .slider-arrow { padding: 6px 10px; font-size: 16px; }
+  /* BANNER IMAGEN — altura reducida */
+  .slide.slide-img img { height: 160px; }
+  /* ETAPAS — ocultar del sidemenu en móvil */
+  .etapa-disclaimer { display: none; }
+  .sidemenu-section { display: none; }
 
   /* CATEGORÍAS — 2 columnas */
   .categorias-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -1168,13 +1173,21 @@ footer {
   .slide-badge { font-size: 9px; }
   .slider-arrow { display: none; }
 
-  /* PRODUCTOS — 1 columna por defecto */
-  .grid { grid-template-columns: 1fr; gap: 12px; padding: 6px 12px 8px; }
-  .card-img { height: 200px; }
+  /* BANNER IMAGEN — más compacta en móvil pequeño */
+  .slide.slide-img img { height: 120px; }
 
-  /* CAROUSEL — cartas más anchas */
-  .carousel .card { width: calc(100vw - 88px); }
-  .carousel-wrap { padding: 0 38px 20px; }
+  /* PRODUCTOS — 2 columnas compactas por defecto (estilo Temu) */
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 6px 10px 8px; }
+  .card-img { height: 140px; }
+  .card-body { padding: 10px; gap: 4px; }
+  .nombre { font-size: 12px; }
+  .precio { font-size: 18px; }
+  .btn-ver-sm { display: none; }
+  .precio-normal { display: none; }
+
+  /* CAROUSEL — 2 cartas visibles */
+  .carousel .card { width: calc(50vw - 18px); }
+  .carousel-wrap { padding: 0 12px 16px; }
 
   /* GRID SUGERENCIAS — 2 columnas */
   .grid-sug { grid-template-columns: repeat(2, 1fr); padding: 8px 12px 16px; }
@@ -1244,10 +1257,11 @@ footer {
     <a href="#" onclick="irInicio();cerrarMenu();return false;">Inicio</a>
     <a href="#" onclick="filtrar('todos');cerrarMenu();scrollCategorias();return false;">Suplementos</a>
     <a href="#" onclick="filtrar('pack');cerrarMenu();scrollProductos();return false;">Ofertas</a>
-    <a href="#" onclick="mostrarNosotros();cerrarMenu();return false;">Nosotros</a>
     <a href="#" onclick="filtrar('proteina');cerrarMenu();scrollProductos();return false;">Proteínas</a>
     <a href="#" onclick="filtrar('vitaminas');cerrarMenu();scrollProductos();return false;">Vitaminas &amp; Minerales</a>
     <a href="#" onclick="filtrar('colageno');cerrarMenu();scrollProductos();return false;">Colágeno &amp; Fibra</a>
+    <a href="#" onclick="mostrarBlog();cerrarMenu();return false;">BariBlog</a>
+    <a href="#" onclick="mostrarNosotros();cerrarMenu();return false;">Nosotros</a>
   </nav>
   <div class="etapa-disclaimer">
     &#9888; Esta información es orientativa. Consulta siempre con tu médico o nutricionista antes de comenzar cualquier suplementación.
@@ -1522,6 +1536,70 @@ footer {
 
 </div>
 
+<!-- MODAL ARTÍCULO ETAPAS -->
+<div class="ba-overlay" id="baEtapasOverlay" onclick="if(event.target===this)cerrarArticuloEtapas()">
+  <div class="ba-modal">
+    <div class="ba-header">
+      <span class="ba-header-label">BariBlog · Guía por Etapas</span>
+      <button class="ba-close" onclick="cerrarArticuloEtapas()">&#x2715;</button>
+    </div>
+    <div class="ba-cover" style="background:linear-gradient(135deg,#1E3A8A 0%,#0EA5E9 55%,#00D68F 100%)">
+      <div class="ba-cover-icon">🗓️</div>
+      <div class="ba-cover-sub">Post-operatorio bariátrico</div>
+    </div>
+    <div class="ba-body">
+      <div class="ba-meta">
+        <span class="ba-tag">Post-operatorio</span>
+        <span class="ba-fecha">Guía permanente</span>
+      </div>
+      <div class="ba-titulo">Etapas post-operatorias: qué comer y qué tomar en cada fase</div>
+      <div class="ba-intro">Tu proceso bariátrico tiene fases bien definidas. Cada una requiere una alimentación y suplementación distinta. Aquí te explicamos qué esperar y qué necesitas en cada etapa.</div>
+      <div class="ba-disclaimer">⚠️ Esta información es orientativa. Consulta siempre con tu médico o nutricionista antes de comenzar cualquier suplementación.</div>
+
+      <div class="ba-h2">Fase 1 — Hospitalaria (Días 0–7)</div>
+      <div class="ba-lista">
+        <li><strong>Alimentación:</strong> Solo líquidos claros a tolerancia: agua, caldos colados, gelatinas sin azúcar.</li>
+        <li><strong>Efectos habituales:</strong> Náuseas, vómitos ocasionales, riesgo de deshidratación.</li>
+        <li><strong>Suplementos:</strong> Líquidos de rehidratación. Multivitamínico oral solo cuando se toleran líquidos.</li>
+      </div>
+
+      <div class="ba-h2">Fase 2 — Líquida Especializada (1–4 semanas)</div>
+      <div class="ba-lista">
+        <li><strong>Alimentación:</strong> Batidos proteicos en porciones pequeñas y frecuentes. Evitar azúcares simples.</li>
+        <li><strong>Efectos habituales:</strong> Saciedad muy temprana, cambios en el gusto.</li>
+        <li><strong>Suplementos:</strong> Multivitamínico diario, proteína en polvo o líquida. Calcio y vitamina D.</li>
+      </div>
+
+      <div class="ba-h2">Fase 3 — Purés y Blandos (4–12 semanas)</div>
+      <div class="ba-lista">
+        <li><strong>Alimentación:</strong> Textura puré y luego blandos. Priorizar proteína en cada toma.</li>
+        <li><strong>Efectos habituales:</strong> Pérdida de peso rápida, posible pérdida de cabello temporal.</li>
+        <li><strong>Suplementos:</strong> Multivitamínico. Evaluar hierro, B12, calcio y vitamina D según análisis.</li>
+      </div>
+
+      <div class="ba-h2">Fase 4 — Consolidación (3–6 meses)</div>
+      <div class="ba-lista">
+        <li><strong>Alimentación:</strong> Incorporación progresiva de sólidos. Priorizar proteínas magras y verduras.</li>
+        <li><strong>Efectos habituales:</strong> Estabilización del apetito, mejora de tolerancia.</li>
+        <li><strong>Suplementos:</strong> Multivitamínico de mantenimiento. Hierro, B12, calcio y vitamina D.</li>
+      </div>
+
+      <div class="ba-h2">Fase 5 — Largo Plazo (+6 meses)</div>
+      <div class="ba-lista">
+        <li><strong>Alimentación:</strong> Comidas pequeñas y frecuentes, énfasis en proteína, evitar bebidas calóricas.</li>
+        <li><strong>Efectos a largo plazo:</strong> Riesgo crónico de déficit de micronutrientes. Análisis periódicos.</li>
+        <li><strong>Suplementos:</strong> Multivitamínico de por vida. Calcio, vitamina D, B12 e hierro según cirugía.</li>
+      </div>
+
+      <div class="ba-cta">
+        <h4>¿Tienes dudas sobre tu etapa actual?</h4>
+        <p>Escríbenos y te orientamos sin costo.</p>
+        <a class="ba-cta-btn" href="https://wa.me/51961841069?text=Hola%2C%20le%C3%AD%20la%20gu%C3%ADa%20de%20etapas%20y%20tengo%20dudas%20sobre%20mi%20suplementaci%C3%B3n" target="_blank">💬 Escríbenos por WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- HEADER -->
 <header>
   <div class="header-inner">
@@ -1730,12 +1808,18 @@ footer {
       </div>
     </div>
 
-    <!-- PRÓXIMAMENTE 2 -->
-    <div class="blog-card-prox">
-      <div class="blog-card-prox-img">📍</div>
-      <div class="blog-card-prox-body">
-        <div class="blog-card-prox-badge">Próximamente</div>
-        <div class="blog-card-prox-titulo">¿Dónde comprar suplementos bariátricos en Perú? Guía completa</div>
+    <!-- ARTÍCULO ETAPAS -->
+    <div class="blog-card">
+      <div class="blog-card-img" style="background:linear-gradient(135deg,#1E3A8A 0%,#0EA5E9 55%,#00D68F 100%);flex-direction:column;gap:6px;">
+        <div style="font-size:52px;">🗓️</div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,0.85);">Guía por Etapas</div>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-fecha">Guía permanente</div>
+        <div class="blog-card-tag">Post-operatorio</div>
+        <div class="blog-card-titulo">Etapas post-operatorias: qué comer y qué tomar en cada fase</div>
+        <div class="blog-card-desc">Desde la fase hospitalaria hasta el largo plazo. Conoce qué suplementos y alimentos corresponden a cada etapa de tu proceso bariátrico.</div>
+        <button class="blog-card-btn" onclick="abrirArticuloEtapas()">Leer guía completa →</button>
       </div>
     </div>
 
@@ -3590,9 +3674,18 @@ function compartirProducto() {
 }
 
 let vistaDesktop = 'normal';
-let vistaMobile = '1col';
+let vistaMobile = window.innerWidth <= 600 ? '2col' : '1col';
 
 renderizar('todos', null);
+// Sincronizar botón activo de vista según pantalla inicial
+(function() {
+  const mob2 = document.getElementById('vBtnMob2');
+  const mob1 = document.getElementById('vBtnMob1');
+  if (vistaMobile === '2col' && mob2 && mob1) {
+    mob1.classList.remove('active');
+    mob2.classList.add('active');
+  }
+})();
 
 // ---- TOOLTIP FLOTANTE ----
 const tooltipMsgs = [
@@ -3680,6 +3773,14 @@ function abrirArticulo() {
 }
 function cerrarArticulo() {
   document.getElementById('baOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function abrirArticuloEtapas() {
+  document.getElementById('baEtapasOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function cerrarArticuloEtapas() {
+  document.getElementById('baEtapasOverlay').classList.remove('open');
   document.body.style.overflow = '';
 }
 function cerrarArticuloFondo(e) {
