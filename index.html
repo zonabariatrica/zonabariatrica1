@@ -4238,13 +4238,16 @@ function mostrarUsuarioLogueado(user) {
       </button>
       <div class="user-dropdown" id="userDropdown">
         <div class="user-dropdown-email">${user.email}</div>
-        <div style="padding:10px 16px 6px;border-bottom:1px solid var(--border-light)">
-          <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text-muted);letter-spacing:1px;margin-bottom:8px">🌐 Idioma</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <button onclick="cambiarIdioma('es')" style="border:1.5px solid var(--border);border-radius:20px;padding:4px 10px;font-size:12px;cursor:pointer;background:none;font-family:inherit">🇪🇸 ES</button>
-            <button onclick="cambiarIdioma('en')" style="border:1.5px solid var(--border);border-radius:20px;padding:4px 10px;font-size:12px;cursor:pointer;background:none;font-family:inherit">🇬🇧 EN</button>
-            <button onclick="cambiarIdioma('pt')" style="border:1.5px solid var(--border);border-radius:20px;padding:4px 10px;font-size:12px;cursor:pointer;background:none;font-family:inherit">🇧🇷 PT</button>
-            <button onclick="cambiarIdioma('fr')" style="border:1.5px solid var(--border);border-radius:20px;padding:4px 10px;font-size:12px;cursor:pointer;background:none;font-family:inherit">🇫🇷 FR</button>
+        <div style="border-bottom:1px solid var(--border-light)">
+          <button onclick="toggleLangDropdown()" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:11px 16px;background:none;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--text)">
+            <span>🌐 Idioma</span>
+            <span id="langDropArrow" style="font-size:11px;color:var(--text-muted)">▼</span>
+          </button>
+          <div id="langDropOptions" style="display:none;background:var(--bg)">
+            <button onclick="cambiarIdioma('es');cerrarLangDropdown()" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 20px;background:none;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;color:var(--text)">🇪🇸 Español</button>
+            <button onclick="cambiarIdioma('en');cerrarLangDropdown()" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 20px;background:none;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;color:var(--text)">🇬🇧 English</button>
+            <button onclick="cambiarIdioma('pt');cerrarLangDropdown()" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 20px;background:none;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;color:var(--text)">🇧🇷 Português</button>
+            <button onclick="cambiarIdioma('fr');cerrarLangDropdown()" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 20px;background:none;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;color:var(--text)">🇫🇷 Français</button>
           </div>
         </div>
         <button class="user-dropdown-btn" onclick="cerrarSesion()">Cerrar sesión</button>
@@ -4266,6 +4269,21 @@ function mostrarBtnLogin() {
 
 function toggleUserDropdown() {
   document.getElementById('userDropdown').classList.toggle('open');
+  cerrarLangDropdown();
+}
+function toggleLangDropdown() {
+  const opts = document.getElementById('langDropOptions');
+  const arrow = document.getElementById('langDropArrow');
+  if (!opts) return;
+  const open = opts.style.display === 'block';
+  opts.style.display = open ? 'none' : 'block';
+  if (arrow) arrow.textContent = open ? '▼' : '▲';
+}
+function cerrarLangDropdown() {
+  const opts = document.getElementById('langDropOptions');
+  const arrow = document.getElementById('langDropArrow');
+  if (opts) opts.style.display = 'none';
+  if (arrow) arrow.textContent = '▼';
 }
 document.addEventListener('click', (e) => {
   const drop = document.getElementById('userDropdown');
