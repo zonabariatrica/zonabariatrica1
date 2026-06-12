@@ -844,6 +844,10 @@ footer {
   .main-nav { display: none; }
   .header-inner { padding: 10px 16px; }
   .search-bar { padding: 8px 16px; }
+  .btn-cuenta span.cuenta-texto { display: none; }
+  .btn-cuenta { padding: 6px 10px; }
+  .user-btn span.cuenta-texto { display: none; }
+  .user-btn { padding: 6px 10px; }
   .slide { padding: 20px 50px 36px; }
   .slide-title { font-size: 18px; }
   .slide-price { font-size: 26px; }
@@ -1265,8 +1269,8 @@ footer {
 .auth-overlay.open { display: flex; }
 .auth-box {
   background: white; border-radius: 18px; padding: 36px 32px;
-  width: 100%; max-width: 400px; box-shadow: var(--shadow-lg);
-  position: relative;
+  width: 100%; max-width: 420px; box-shadow: var(--shadow-lg);
+  position: relative; max-height: 92vh; overflow-y: auto;
 }
 .auth-close {
   position: absolute; top: 14px; right: 16px;
@@ -1367,7 +1371,8 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
     <button class="close-btn" onclick="cerrarMenu()">&#x2715;</button>
   </div>
   <nav class="sidemenu-nav">
-    <a href="#" onclick="irInicio();cerrarMenu();return false;">Inicio</a>
+    <a href="#" id="sidemenuCuenta" onclick="abrirAuth();cerrarMenu();return false;">👤 Mi cuenta</a>
+    <a href="#" onclick="irInicio();cerrarMenu();return false;" style="border-top:2px solid var(--border)">Inicio</a>
     <a href="#" onclick="filtrar('todos');cerrarMenu();scrollCategorias();return false;">Suplementos</a>
     <a href="#" onclick="filtrar('pack');cerrarMenu();scrollProductos();return false;">Ofertas</a>
     <a href="#" onclick="filtrar('proteina');cerrarMenu();scrollProductos();return false;">Proteínas</a>
@@ -1376,6 +1381,17 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
     <a href="#" onclick="mostrarBlog();cerrarMenu();return false;">BariBlog</a>
     <a href="#" onclick="mostrarNosotros();cerrarMenu();return false;">Quiénes somos</a>
   </nav>
+  <div style="padding:14px 16px;border-bottom:1px solid var(--border-light)">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--blue);letter-spacing:1.5px;margin-bottom:10px">🌐 Idioma</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('es');cerrarMenu()">🇪🇸 ES</button>
+      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('en');cerrarMenu()">🇬🇧 EN</button>
+      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('de');cerrarMenu()">🇩🇪 DE</button>
+      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('it');cerrarMenu()">🇮🇹 IT</button>
+      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('pt');cerrarMenu()">🇧🇷 PT</button>
+      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('fr');cerrarMenu()">🇫🇷 FR</button>
+    </div>
+  </div>
   <div class="etapa-disclaimer">
     &#9888; Esta información es orientativa. Consulta siempre con tu médico o nutricionista antes de comenzar cualquier suplementación.
   </div>
@@ -1762,21 +1778,10 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.528 5.855L0 24l6.335-1.508A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.502-5.2-1.379l-.374-.217-3.754.894.944-3.653-.24-.389A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
         CHATEA CON NOSOTROS
       </a>
-      <div class="lang-wrap">
-        <button class="lang-btn" onclick="toggleLangMenu(event)">🌐 <span id="langLabel">ES</span></button>
-        <div class="lang-menu" id="langMenu">
-          <button class="lang-option active" onclick="cambiarIdioma('es')">🇪🇸 Español</button>
-          <button class="lang-option" onclick="cambiarIdioma('en')">🇬🇧 English</button>
-          <button class="lang-option" onclick="cambiarIdioma('de')">🇩🇪 Deutsch</button>
-          <button class="lang-option" onclick="cambiarIdioma('it')">🇮🇹 Italiano</button>
-          <button class="lang-option" onclick="cambiarIdioma('pt')">🇧🇷 Português</button>
-          <button class="lang-option" onclick="cambiarIdioma('fr')">🇫🇷 Français</button>
-        </div>
-      </div>
       <div id="authHeaderBtn">
         <button class="btn-cuenta" onclick="abrirAuth()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-          Mi cuenta
+          <span class="cuenta-texto">Mi cuenta</span>
         </button>
       </div>
     </div>
@@ -4107,16 +4112,39 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     <!-- REGISTER -->
     <div id="formRegister" style="display:none">
-      <div class="auth-input-wrap">
-        <label>Nombre</label>
-        <input type="text" id="regNombre" class="auth-input" placeholder="Tu nombre">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="auth-input-wrap" style="margin-bottom:0">
+          <label>Nombre *</label>
+          <input type="text" id="regNombre" class="auth-input" placeholder="Nombre">
+        </div>
+        <div class="auth-input-wrap" style="margin-bottom:0">
+          <label>Apellido *</label>
+          <input type="text" id="regApellido" class="auth-input" placeholder="Apellido">
+        </div>
       </div>
-      <div class="auth-input-wrap">
-        <label>Correo electrónico</label>
+      <div class="auth-input-wrap" style="margin-top:14px">
+        <label>Correo electrónico *</label>
         <input type="email" id="regEmail" class="auth-input" placeholder="tu@correo.com">
       </div>
       <div class="auth-input-wrap">
-        <label>Contraseña</label>
+        <label>Celular</label>
+        <input type="tel" id="regCelular" class="auth-input" placeholder="Ej: 51961841069">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="auth-input-wrap" style="margin-bottom:0">
+          <label>Tipo de doc.</label>
+          <select id="regTipoDoc" class="auth-input" style="cursor:pointer">
+            <option value="DNI">DNI</option>
+            <option value="CE">CE</option>
+          </select>
+        </div>
+        <div class="auth-input-wrap" style="margin-bottom:0">
+          <label>N° de documento</label>
+          <input type="text" id="regNumDoc" class="auth-input" placeholder="Nro. documento">
+        </div>
+      </div>
+      <div class="auth-input-wrap" style="margin-top:14px">
+        <label>Contraseña *</label>
         <input type="password" id="regPass" class="auth-input" placeholder="Mínimo 6 caracteres">
       </div>
       <button class="auth-btn" onclick="hacerRegistro()">Crear cuenta gratis</button>
@@ -4173,13 +4201,23 @@ async function hacerLogin() {
 
 async function hacerRegistro() {
   const nombre = document.getElementById('regNombre').value.trim();
+  const apellido = document.getElementById('regApellido').value.trim();
   const email = document.getElementById('regEmail').value.trim();
   const pass = document.getElementById('regPass').value;
+  const celular = document.getElementById('regCelular').value.trim();
+  const tipoDoc = document.getElementById('regTipoDoc').value;
+  const numDoc = document.getElementById('regNumDoc').value.trim();
   const msg = document.getElementById('registerMsg');
-  if (!nombre || !email || !pass) { msg.textContent = 'Completa todos los campos'; msg.className = 'auth-msg err'; return; }
+  if (!nombre || !apellido || !email || !pass) { msg.textContent = 'Completa los campos obligatorios (*)'; msg.className = 'auth-msg err'; return; }
   if (pass.length < 6) { msg.textContent = 'La contraseña debe tener al menos 6 caracteres'; msg.className = 'auth-msg err'; return; }
   msg.textContent = 'Creando cuenta...'; msg.className = 'auth-msg';
-  const { error } = await supa.auth.signUp({ email, password: pass, options: { data: { nombre } } });
+  const { error } = await supa.auth.signUp({
+    email, password: pass,
+    options: {
+      emailRedirectTo: 'https://www.zonabariatrica.com',
+      data: { full_name: nombre + ' ' + apellido, nombre, apellido, celular, tipo_documento: tipoDoc, numero_documento: numDoc }
+    }
+  });
   if (error) { msg.textContent = error.message; msg.className = 'auth-msg err'; }
   else { msg.textContent = '¡Cuenta creada! Revisa tu correo para confirmar.'; msg.className = 'auth-msg ok'; }
 }
@@ -4196,21 +4234,25 @@ function mostrarUsuarioLogueado(user) {
     <div class="user-wrap">
       <button class="user-btn" onclick="toggleUserDropdown()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-        ${nombre}
+        <span class="cuenta-texto">${nombre}</span>
       </button>
       <div class="user-dropdown" id="userDropdown">
         <div class="user-dropdown-email">${user.email}</div>
         <button class="user-dropdown-btn" onclick="cerrarSesion()">Cerrar sesión</button>
       </div>
     </div>`;
+  const sm = document.getElementById('sidemenuCuenta');
+  if (sm) { sm.textContent = '👤 ' + nombre; sm.onclick = (e) => { toggleUserDropdown(); cerrarMenu(); e.preventDefault(); }; }
 }
 
 function mostrarBtnLogin() {
   const wrap = document.getElementById('authHeaderBtn');
   wrap.innerHTML = `<button class="btn-cuenta" onclick="abrirAuth()">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-    Mi cuenta
+    <span class="cuenta-texto">Mi cuenta</span>
   </button>`;
+  const sm = document.getElementById('sidemenuCuenta');
+  if (sm) { sm.textContent = '👤 Mi cuenta'; sm.onclick = (e) => { abrirAuth(); cerrarMenu(); e.preventDefault(); }; }
 }
 
 function toggleUserDropdown() {
