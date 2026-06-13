@@ -1806,7 +1806,9 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
   </div>
   <div class="search-bar">
     <div class="search-inner">
-      <input type="text" id="searchInput" class="search-input"
+      <input type="text" name="fake-user" style="display:none" autocomplete="username">
+      <input type="password" name="fake-pass" style="display:none" autocomplete="current-password">
+      <input type="search" id="searchInput" class="search-input"
              placeholder="Buscar producto... (ej: proteína, biotina, colágeno, pack)"
              oninput="buscar(this.value)" autocomplete="off">
       <button class="search-clear" id="searchClear" onclick="limpiarBusqueda()">&#x2715;</button>
