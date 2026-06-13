@@ -3711,10 +3711,21 @@ function cerrarModalEnvio() {
   document.getElementById('envioModal').classList.remove('open');
 }
 
-function confirmarEnvio() {
+async function confirmarEnvio() {
   cerrarModalEnvio();
   document.querySelectorAll('input[name="formMetodoPago"]').forEach(r => { r.checked = r.value === 'yape'; });
   actualizarTotalForm();
+  // Auto-rellenar con datos del perfil si hay sesión
+  const { data: { session } } = await supa.auth.getSession();
+  if (session) {
+    const m = session.user.user_metadata || {};
+    const nombre = ((m.nombre || '') + ' ' + (m.apellido || '')).trim();
+    if (nombre) document.getElementById('clienteNombre').value = nombre;
+    if (m.numero_documento) document.getElementById('clienteDNI').value = m.numero_documento;
+    if (m.direccion) document.getElementById('clienteDireccion').value = m.direccion + (m.referencia ? ' — ' + m.referencia : '');
+    if (m.ciudad) document.getElementById('clienteDistrito').value = (m.ciudad || '') + (m.pais && m.pais !== 'Peru' ? ', ' + m.pais : '');
+    if (session.user.email) document.getElementById('clienteCorreo').value = session.user.email;
+  }
   document.getElementById('modalDatosCliente').classList.add('open');
 }
 
