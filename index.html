@@ -1501,7 +1501,12 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
     <div class="cot-confirm-icon">✅</div>
     <h3>¡Cotización enviada!</h3>
     <p>Tu lista fue enviada por WhatsApp. Nuestro equipo te contacta pronto para coordinar el pago y la entrega.</p>
-    <button class="cot-confirm-btn" onclick="cerrarConfirm()">Entendido</button>
+    <div id="cotConfirmNudge" style="display:none;margin-top:16px;padding:14px;background:var(--blue-light);border:1.5px solid var(--blue);border-radius:var(--r);text-align:left">
+      <p style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">¿La próxima vez sin llenar nada?</p>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Crea tu cuenta gratis y tus datos se rellenan solos en cada pedido.</p>
+      <button class="cot-confirm-btn" style="margin-bottom:0;padding:10px 18px;font-size:13px" onclick="cerrarConfirm();abrirAuth('registro')">Crear mi cuenta →</button>
+    </div>
+    <button class="cot-confirm-btn" style="margin-top:10px;background:transparent;color:var(--text-muted);border:1.5px solid var(--border)" onclick="cerrarConfirm()">Cerrar</button>
   </div>
 </div>
 
@@ -3871,7 +3876,10 @@ function enviarCotizacion(nombre, dni, direccion, distrito, correo, metodo) {
   cerrarCarrito();
   carrito = [];
   actualizarCartUI();
-  document.getElementById('cotConfirm').classList.add('open');
+  supa.auth.getSession().then(({ data: { session } }) => {
+    document.getElementById('cotConfirmNudge').style.display = session ? 'none' : 'block';
+    document.getElementById('cotConfirm').classList.add('open');
+  });
 }
 
 function cerrarConfirm() {
@@ -4337,8 +4345,9 @@ supa.auth.onAuthStateChange((_event, session) => {
   else { mostrarBtnLogin(); favoritosSet = new Set(); actualizarCorazones(); }
 });
 
-function abrirAuth() {
+function abrirAuth(tab) {
   document.getElementById('authOverlay').classList.add('open');
+  if (tab === 'registro') switchTab('register');
 }
 function cerrarAuth() {
   document.getElementById('authOverlay').classList.remove('open');
