@@ -324,6 +324,21 @@ header {
 }
 .sub-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
 .sub-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
+/* FILTROS CHIPS — estilo Spotify */
+.filtros-chips {
+  display: flex; gap: 8px; flex-wrap: nowrap; overflow-x: auto;
+  padding: 12px 0 4px; -ms-overflow-style: none; scrollbar-width: none;
+}
+.filtros-chips::-webkit-scrollbar { display: none; }
+.filtro-chip {
+  flex-shrink: 0; padding: 7px 18px; font-size: 13px; font-weight: 600;
+  border: 1.5px solid var(--border); border-radius: var(--r-pill);
+  background: var(--surface); color: var(--text-muted);
+  cursor: pointer; transition: all 0.15s; font-family: 'Plus Jakarta Sans', sans-serif;
+  white-space: nowrap;
+}
+.filtro-chip:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+.filtro-chip.active { background: var(--text); color: #fff; border-color: var(--text); }
 .seccion-titulo {
   padding: 20px 32px 8px; font-size: 10.5px; font-weight: 700;
   text-transform: uppercase; color: var(--text-light); letter-spacing: 1.5px;
@@ -1849,6 +1864,14 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
         <option value="desc">Precio: mayor a menor</option>
       </select>
     </div>
+    <div class="filtros-chips" id="filtrosChips">
+      <button class="filtro-chip active" data-chip="todos" onclick="filtrar('todos')">Todos</button>
+      <button class="filtro-chip" data-chip="pack" onclick="filtrar('pack')">Packs</button>
+      <button class="filtro-chip" data-chip="proteina" onclick="filtrar('proteina')">Proteínas</button>
+      <button class="filtro-chip" data-chip="vitaminas" onclick="filtrar('vitaminas')">Vitaminas</button>
+      <button class="filtro-chip" data-chip="colageno" onclick="filtrar('colageno')">Colágeno & Fibra</button>
+      <button class="filtro-chip" data-chip="oferta" onclick="filtrar('oferta')">Ofertas</button>
+    </div>
     <div class="subfiltros" id="subfiltros" style="display:none"></div>
   </div>
   <div id="contenido"></div>
@@ -2810,6 +2833,7 @@ function megaFiltrar(cat, sub) {
   ocultarSlider();
   currentCat = cat;
   document.querySelectorAll('.nav-link[data-filter]').forEach(b => b.classList.remove('active'));
+  actualizarChips(cat);
   actualizarSubfiltros(cat);
 
   if (cat === 'vitaminas' && sub) {
@@ -2826,10 +2850,17 @@ function megaFiltrar(cat, sub) {
   scrollProductos();
 }
 
+function actualizarChips(f) {
+  document.querySelectorAll('.filtro-chip').forEach(b => {
+    b.classList.toggle('active', b.dataset.chip === f);
+  });
+}
+
 // ---- FILTER ----
 function filtrar(f) {
   ocultarBlog();
   currentCat = f;
+  actualizarChips(f);
   document.getElementById('searchInput').value = '';
   document.getElementById('searchClear').style.display = 'none';
   cerrarSugerencias();
