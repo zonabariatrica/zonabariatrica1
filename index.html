@@ -1410,17 +1410,6 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
     <a href="#" onclick="mostrarBlog();cerrarMenu();return false;">BariBlog</a>
     <a href="#" onclick="mostrarNosotros();cerrarMenu();return false;">Quiénes somos</a>
   </nav>
-  <div style="padding:14px 16px;border-bottom:1px solid var(--border-light)">
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--blue);letter-spacing:1.5px;margin-bottom:10px">🌐 Idioma</div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px">
-      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('es');cerrarMenu()">🇪🇸 ES</button>
-      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('en');cerrarMenu()">🇬🇧 EN</button>
-      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('de');cerrarMenu()">🇩🇪 DE</button>
-      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('it');cerrarMenu()">🇮🇹 IT</button>
-      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('pt');cerrarMenu()">🇧🇷 PT</button>
-      <button class="lang-option" style="border:1.5px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px" onclick="cambiarIdioma('fr');cerrarMenu()">🇫🇷 FR</button>
-    </div>
-  </div>
   <div class="etapa-disclaimer">
     &#9888; Esta información es orientativa. Consulta siempre con tu médico o nutricionista antes de comenzar cualquier suplementación.
   </div>
@@ -3110,7 +3099,7 @@ function actualizarSubfiltros(f) {
   if (f === 'proteina') {
     const btns = [
       { sub:'ambas', label:'Ambas' },
-      { sub:'polvo', label:'En Polvo' },
+      { sub:'polvo', label:'Polvo' },
       { sub:'liquida', label:'Líquida' },
       { sub:'packs', label:'Packs' }
     ];
