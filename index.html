@@ -699,9 +699,9 @@ footer {
 }
 .footer-inner {
   max-width: 1280px; margin: 0 auto;
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 32px; padding: 36px 32px;
-  align-items: start;
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 48px; padding: 40px 80px;
+  align-items: start; justify-items: center; max-width: 960px;
 }
 .footer-nav-link {
   display: block; color: rgba(255,255,255,0.65); text-decoration: none;
@@ -2226,39 +2226,10 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
   </div>
 </div>
 
-<!-- PAGOS -->
-<div class="pagos">
-  <h3 data-i18n="pagos_titulo">MÉTODOS DE PAGO</h3>
-  <div class="pagos-lista">
-    <div class="pago-item" style="background:none;border:none;padding:4px;">
-      <img src="img/logo-yape.png" alt="Yape" style="height:36px;width:auto;object-fit:contain;">
-    </div>
-    <div class="pago-item" style="background:none;border:none;padding:4px;">
-      <img src="img/logo-izipay.png" alt="Izipay" style="height:36px;width:auto;object-fit:contain;">
-    </div>
-  </div>
-</div>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <!-- Col 1: Marca -->
-    <div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-        <img src="img/logo-zb.png" alt="ZB" style="width:36px;height:36px;object-fit:contain;border-radius:8px;background:#fff;padding:4px">
-        <div>
-          <div class="footer-brand-name" style="margin-bottom:0">Zona Bariátrica</div>
-          <div class="footer-tagline" style="margin-bottom:0">Suplementos Bariátricos</div>
-        </div>
-      </div>
-      <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:14px;line-height:1.6">Suplementos vitamínicos y proteicos especializados para pacientes que han pasado por cirugía bariátrica. Lima y provincias.</p>
-      <div class="footer-contact-line">📱 <strong>+51 961 841 069</strong></div>
-      <div class="footer-redes" style="margin-top:12px">
-        <a href="https://instagram.com/zonabariatricaof" target="_blank"><img src="img/instagram.png" alt="Instagram"></a>
-        <a href="https://www.tiktok.com/@zonabariatrica" target="_blank"><img src="img/tiktok.png" alt="TikTok"></a>
-        <a href="https://wa.me/51961841069" target="_blank"><img src="img/whatsapp.jpg" alt="WhatsApp" style="border-radius:6px"></a>
-      </div>
-    </div>
     <!-- Col 2: Navegación -->
     <div>
       <div class="footer-col-title">Navegación</div>
@@ -2268,10 +2239,10 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
       <a class="footer-nav-link" href="#" onclick="mostrarBlog();return false;">BariBlog</a>
       <a class="footer-nav-link" href="#" onclick="mostrarNosotros();return false;">Quiénes somos</a>
     </div>
-    <!-- Col 3: Envíos -->
-    <div>
-      <div class="footer-col-title">Despacho y envíos</div>
-      <div class="footer-envios-badge">
+    <!-- Col 3: Despacho y envíos -->
+    <div style="width:100%">
+      <div class="footer-col-title" style="text-align:center">Despacho y envíos</div>
+      <div class="footer-envios-badge" style="justify-content:center;min-width:260px;white-space:nowrap">
         <div style="flex:1">
           <div class="ev-title">Envíos a todo el Perú</div>
           <div class="ev-sub">Lima y provincias</div>
@@ -2281,16 +2252,18 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
         </div>
       </div>
     </div>
-    <!-- Col 4: Legal -->
+    <!-- Col 4: Contacto -->
     <div>
-      <div class="footer-col-title">Legal</div>
-      <a class="footer-nav-link" href="#" onclick="abrirLegal('privacidad');return false;">Política de privacidad</a>
-      <a class="footer-nav-link" href="#" onclick="abrirLegal('terminos');return false;">Términos y condiciones</a>
-      <a class="footer-nav-link" href="#" onclick="abrirLegal('devoluciones');return false;">Política de devoluciones</a>
-      <a class="footer-nav-link" href="https://www.indecopi.gob.pe/libro-de-reclamaciones" target="_blank">📋 Libro de reclamaciones</a>
+      <div class="footer-col-title">Contacto</div>
+      <div class="footer-contact-line" style="margin-bottom:12px">📱 <strong>+51 961 841 069</strong></div>
+      <div class="footer-redes">
+        <a href="https://instagram.com/zonabariatricaof" target="_blank"><img src="img/instagram.png" alt="Instagram"></a>
+        <a href="https://www.tiktok.com/@zonabariatrica" target="_blank"><img src="img/tiktok.png" alt="TikTok"></a>
+        <a href="https://wa.me/51961841069" target="_blank"><img src="img/whatsapp.jpg" alt="WhatsApp" style="border-radius:6px"></a>
+      </div>
     </div>
   </div>
-  <div class="footer-bottom">© 2026 Zona Bariátrica · RUC 10458157893 · Todos los derechos reservados · Lima, Perú</div>
+  <div class="footer-bottom">© 2026 Zona Bariátrica · Todos los derechos reservados · Lima, Perú</div>
 </footer>
 
 <script>
