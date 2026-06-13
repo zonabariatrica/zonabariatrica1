@@ -4294,7 +4294,7 @@ async function hacerRegistro() {
     email, password: pass,
     options: {
       emailRedirectTo: 'https://www.zonabariatrica.com',
-      data: { full_name: nombre + ' ' + apellido, nombre, apellido, celular, tipo_documento: tipoDoc, numero_documento: numDoc }
+      data: { name: nombre + ' ' + apellido, full_name: nombre + ' ' + apellido, nombre, apellido, celular, tipo_documento: tipoDoc, numero_documento: numDoc }
     }
   });
   if (error) { msg.textContent = error.message; msg.className = 'auth-msg err'; }
