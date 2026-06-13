@@ -4193,6 +4193,49 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 
+<!-- MI PERFIL PANEL -->
+<div class="auth-overlay" id="perfilOverlay" onclick="cerrarPerfilFuera(event)">
+  <div class="auth-box">
+    <button class="auth-close" onclick="cerrarPerfil()">&#x2715;</button>
+    <div class="auth-logo"><span>ZB</span></div>
+    <h2 style="text-align:center;font-size:18px;font-weight:700;margin-bottom:20px;color:var(--text)">Mi Perfil</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="auth-input-wrap" style="margin-bottom:0">
+        <label>Nombre *</label>
+        <input type="text" id="pfNombre" class="auth-input" placeholder="Nombre">
+      </div>
+      <div class="auth-input-wrap" style="margin-bottom:0">
+        <label>Apellido *</label>
+        <input type="text" id="pfApellido" class="auth-input" placeholder="Apellido">
+      </div>
+    </div>
+    <div class="auth-input-wrap" style="margin-top:14px">
+      <label>Correo electrónico</label>
+      <input type="email" id="pfEmail" class="auth-input" placeholder="—" disabled style="background:var(--bg);color:var(--text-muted);cursor:not-allowed">
+    </div>
+    <div class="auth-input-wrap">
+      <label>Celular</label>
+      <input type="tel" id="pfCelular" class="auth-input" placeholder="Ej: 51961841069">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="auth-input-wrap" style="margin-bottom:0">
+        <label>Tipo de doc.</label>
+        <select id="pfTipoDoc" class="auth-input" style="cursor:pointer">
+          <option value="DNI">DNI</option>
+          <option value="CE">CE</option>
+          <option value="Pasaporte">Pasaporte</option>
+        </select>
+      </div>
+      <div class="auth-input-wrap" style="margin-bottom:0">
+        <label>N° de documento</label>
+        <input type="text" id="pfNumDoc" class="auth-input" placeholder="Nro. documento">
+      </div>
+    </div>
+    <button class="auth-btn" style="margin-top:20px" onclick="guardarPerfil()">Guardar cambios</button>
+    <div class="auth-msg" id="pfMsg"></div>
+  </div>
+</div>
+
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
@@ -4330,6 +4373,7 @@ function mostrarUsuarioLogueado(user) {
             </div>
           </div>
         </div>
+        <button class="user-dropdown-btn" onclick="abrirPerfil()">👤 Mi Perfil</button>
         <button class="user-dropdown-btn" onclick="mostrarVistaFavoritos()">🤍 Mis Favoritos</button>
         <button class="user-dropdown-btn" onclick="cerrarSesion()">Cerrar sesión</button>
       </div>
@@ -4410,6 +4454,52 @@ async function calificarProducto(productoId, estrellas) {
     { onConflict: 'user_id,producto_id' }
   );
   cargarCalificacionModal(productoId);
+}
+
+// ---- MI PERFIL ----
+function abrirPerfil() {
+  document.getElementById('userDropdown').classList.remove('open');
+  document.getElementById('perfilOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  cargarDatosPerfil();
+}
+function cerrarPerfil() {
+  document.getElementById('perfilOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('pfMsg').textContent = '';
+}
+function cerrarPerfilFuera(e) {
+  if (e.target === document.getElementById('perfilOverlay')) cerrarPerfil();
+}
+async function cargarDatosPerfil() {
+  const { data: { session } } = await supa.auth.getSession();
+  if (!session) return;
+  const m = session.user.user_metadata || {};
+  document.getElementById('pfNombre').value = m.nombre || '';
+  document.getElementById('pfApellido').value = m.apellido || '';
+  document.getElementById('pfEmail').value = session.user.email || '';
+  document.getElementById('pfCelular').value = m.celular || '';
+  document.getElementById('pfTipoDoc').value = m.tipo_documento || 'DNI';
+  document.getElementById('pfNumDoc').value = m.numero_documento || '';
+}
+async function guardarPerfil() {
+  const nombre = document.getElementById('pfNombre').value.trim();
+  const apellido = document.getElementById('pfApellido').value.trim();
+  const celular = document.getElementById('pfCelular').value.trim();
+  const tipoDoc = document.getElementById('pfTipoDoc').value;
+  const numDoc = document.getElementById('pfNumDoc').value.trim();
+  const msg = document.getElementById('pfMsg');
+  if (!nombre || !apellido) { msg.textContent = 'Nombre y apellido son obligatorios'; msg.className = 'auth-msg err'; return; }
+  msg.textContent = 'Guardando...'; msg.className = 'auth-msg';
+  const { error } = await supa.auth.updateUser({
+    data: { name: nombre+' '+apellido, full_name: nombre+' '+apellido, nombre, apellido, celular, tipo_documento: tipoDoc, numero_documento: numDoc }
+  });
+  if (error) { msg.textContent = 'Error al guardar. Intenta de nuevo.'; msg.className = 'auth-msg err'; return; }
+  msg.textContent = '¡Perfil actualizado correctamente!'; msg.className = 'auth-msg ok';
+  const partes = (nombre+' '+apellido).split(' ');
+  const iniciales = ((partes[0]?.[0]||'')+(partes[1]?.[0]||'')).toUpperCase();
+  const userBtn = document.querySelector('.user-btn');
+  if (userBtn) userBtn.textContent = iniciales;
 }
 
 function toggleUserDropdown() {
