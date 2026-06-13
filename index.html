@@ -3543,15 +3543,22 @@ function abrirModal(id) {
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
   cargarCalificacionModal(id);
+  history.pushState({ productoId: id }, '', '#producto/' + id);
 }
 
 function cerrarModal() {
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
+  history.pushState(null, '', location.pathname);
 }
 function cerrarModalFondo(e) {
   if (e.target === document.getElementById('modalOverlay')) cerrarModal();
 }
+window.addEventListener('popstate', () => {
+  const match = location.hash.match(/^#producto\/(.+)$/);
+  if (match) { abrirModal(match[1]); }
+  else { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow = ''; }
+});
 function toggleTN() {
   const b = document.getElementById('tnBody');
   b.classList.toggle('open');
@@ -3972,11 +3979,14 @@ function aplicarOrden() {
 function compartirProducto() {
   const p = productos.find(x => x.id === currentModalId);
   if (!p) return;
-  const msg = `¡Mira este producto de *Zona Bariátrica*!\n\n*${p.nombre}*\n${p.desc}\n\nPrecio: S/ ${p.precio}\n\nPídelo aquí 👉 https://wa.me/${WA}`;
+  const url = `https://www.zonabariatrica.com/#producto/${p.id}`;
+  const msg = `¡Mira este producto de *Zona Bariátrica*!\n\n*${p.nombre}*\n${p.desc}\n\nPrecio: S/ ${p.precio}\n\n🔗 ${url}`;
   if (navigator.share) {
-    navigator.share({ title: p.nombre, text: msg });
+    navigator.share({ title: p.nombre, text: p.desc, url });
   } else {
-    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+    navigator.clipboard?.writeText(url).then(() => alert('¡Link copiado! Ya puedes pegarlo donde quieras.')).catch(() => {
+      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+    });
   }
 }
 
@@ -4383,6 +4393,15 @@ const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
 (async () => {
   const { data: { session } } = await supa.auth.getSession();
   if (session) { mostrarUsuarioLogueado(session.user); cargarFavoritos(session.user); }
+  // Abrir producto si la URL tiene hash #producto/id
+  const hashMatch = location.hash.match(/^#producto\/(.+)$/);
+  if (hashMatch) {
+    const intentar = (intentos) => {
+      if (productos.length) { abrirModal(hashMatch[1]); }
+      else if (intentos > 0) { setTimeout(() => intentar(intentos - 1), 300); }
+    };
+    intentar(10);
+  }
 })();
 
 supa.auth.onAuthStateChange((_event, session) => {
