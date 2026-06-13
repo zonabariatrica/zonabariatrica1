@@ -699,10 +699,15 @@ footer {
 }
 .footer-inner {
   max-width: 1280px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 32px; padding: 36px 32px;
   align-items: start;
 }
+.footer-nav-link {
+  display: block; color: rgba(255,255,255,0.65); text-decoration: none;
+  font-size: 13px; margin-bottom: 8px; transition: color 0.15s;
+}
+.footer-nav-link:hover { color: #fff; }
 .footer-col-title {
   font-size: 10px; font-weight: 700; text-transform: uppercase;
   letter-spacing: 1.5px; color: var(--mint); margin-bottom: 12px;
@@ -2239,12 +2244,32 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
   <div class="footer-inner">
     <!-- Col 1: Marca -->
     <div>
-      <div class="footer-brand-name">Zona Bariátrica</div>
-      <div class="footer-tagline">Suplementos Bariátricos</div>
-      <div class="footer-contact-line">WhatsApp: <strong>+51 961 841 069</strong></div>
-      <div class="footer-contact-line" style="margin-top:4px">Lima y provincias</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <img src="img/logo-zb.png" alt="ZB" style="width:36px;height:36px;object-fit:contain">
+        <div>
+          <div class="footer-brand-name" style="margin-bottom:0">Zona Bariátrica</div>
+          <div class="footer-tagline" style="margin-bottom:0">Suplementos Bariátricos</div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:14px;line-height:1.6">Suplementos vitamínicos y proteicos especializados para pacientes que han pasado por cirugía bariátrica. Lima y provincias.</p>
+      <div class="footer-contact-line">📱 <strong>+51 961 841 069</strong></div>
+      <div class="footer-contact-line" style="margin-top:4px">✉️ contacto@zonabariatrica.com</div>
+      <div class="footer-redes" style="margin-top:12px">
+        <a href="https://instagram.com/zonabariatricaof" target="_blank"><img src="img/instagram.png" alt="Instagram"></a>
+        <a href="https://www.tiktok.com/@zonabariatrica" target="_blank"><img src="img/tiktok.png" alt="TikTok"></a>
+        <a href="https://wa.me/51961841069" target="_blank"><img src="img/whatsapp.jpg" alt="WhatsApp" style="border-radius:6px"></a>
+      </div>
     </div>
-    <!-- Col 2: Envíos -->
+    <!-- Col 2: Navegación -->
+    <div>
+      <div class="footer-col-title">Navegación</div>
+      <a class="footer-nav-link" href="#" onclick="irInicio();return false;">Inicio</a>
+      <a class="footer-nav-link" href="#" onclick="filtrar('todos');scrollProductos();return false;">Suplementos</a>
+      <a class="footer-nav-link" href="#" onclick="filtrar('oferta');scrollProductos();return false;">Ofertas</a>
+      <a class="footer-nav-link" href="#" onclick="mostrarBlog();return false;">BariBlog</a>
+      <a class="footer-nav-link" href="#" onclick="mostrarNosotros();return false;">Quiénes somos</a>
+    </div>
+    <!-- Col 3: Envíos -->
     <div>
       <div class="footer-col-title">Despacho y envíos</div>
       <div class="footer-envios-badge">
@@ -2257,20 +2282,16 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
         </div>
       </div>
     </div>
-    <!-- Col 3: Redes -->
+    <!-- Col 4: Legal -->
     <div>
-      <div class="footer-col-title">Síguenos</div>
-      <div class="footer-redes">
-        <a href="https://instagram.com/zonabariatricaof" target="_blank">
-          <img src="img/instagram.png" alt="Instagram">
-        </a>
-        <a href="https://www.tiktok.com/@zonabariatrica" target="_blank">
-          <img src="img/tiktok.png" alt="TikTok">
-        </a>
-      </div>
+      <div class="footer-col-title">Legal</div>
+      <a class="footer-nav-link" href="#" onclick="abrirLegal('privacidad');return false;">Política de privacidad</a>
+      <a class="footer-nav-link" href="#" onclick="abrirLegal('terminos');return false;">Términos y condiciones</a>
+      <a class="footer-nav-link" href="#" onclick="abrirLegal('devoluciones');return false;">Política de devoluciones</a>
+      <a class="footer-nav-link" href="https://www.indecopi.gob.pe/libro-de-reclamaciones" target="_blank">📋 Libro de reclamaciones</a>
     </div>
   </div>
-  <div class="footer-bottom" data-i18n="footer_rights">© 2025 Zona Bariátrica — Suplementos especializados para pacientes bariátricos</div>
+  <div class="footer-bottom">© 2026 Zona Bariátrica · RUC 10458157893 · Todos los derechos reservados · Lima, Perú</div>
 </footer>
 
 <script>
@@ -3976,6 +3997,46 @@ function enviarCotizacion(nombre, dni, direccion, distrito, correo, metodo, zona
 
 function cerrarConfirm() {
   document.getElementById('cotConfirm').classList.remove('open');
+}
+
+function abrirLegal(tipo) {
+  const contenidos = {
+    privacidad: {
+      titulo: 'Política de Privacidad',
+      texto: `<p>En Zona Bariátrica (RUC 10458157893) nos comprometemos a proteger tu información personal.</p>
+      <p><strong>Datos que recopilamos:</strong> nombre, correo electrónico, número de teléfono y dirección de envío, únicamente para procesar tus pedidos.</p>
+      <p><strong>Uso de datos:</strong> Tus datos se usan exclusivamente para coordinar pedidos y envíos. No los compartimos con terceros salvo empresas de courier (Shalom) para efectuar la entrega.</p>
+      <p><strong>Seguridad:</strong> Tu información se almacena de forma segura mediante Supabase con cifrado SSL.</p>
+      <p><strong>Contacto:</strong> Para consultas sobre tus datos escríbenos a contacto@zonabariatrica.com o al +51 961 841 069.</p>`
+    },
+    terminos: {
+      titulo: 'Términos y Condiciones',
+      texto: `<p><strong>1. Productos:</strong> Los precios están en soles peruanos (S/). Las imágenes son referenciales.</p>
+      <p><strong>2. Pedidos:</strong> Los pedidos se coordinan vía WhatsApp. El pago confirma la reserva del producto.</p>
+      <p><strong>3. Envíos:</strong> Realizamos envíos a Lima y provincias vía Shalom. El costo de envío varía según destino.</p>
+      <p><strong>4. Stock:</strong> Nos reservamos el derecho de cancelar un pedido si el producto no está disponible, con devolución íntegra del pago.</p>
+      <p><strong>5. Uso:</strong> Los suplementos son complementos alimenticios. Consulta siempre con tu médico antes de consumirlos.</p>`
+    },
+    devoluciones: {
+      titulo: 'Política de Devoluciones',
+      texto: `<p><strong>Plazo:</strong> Aceptamos devoluciones dentro de los 7 días calendario desde la recepción del producto.</p>
+      <p><strong>Condiciones:</strong> El producto debe estar sin abrir, en su empaque original y en perfectas condiciones.</p>
+      <p><strong>Proceso:</strong> Contáctanos por WhatsApp al +51 961 841 069 indicando el motivo de la devolución.</p>
+      <p><strong>Reembolso:</strong> Una vez verificado el producto, realizamos el reembolso vía Yape o transferencia bancaria en un plazo de 3-5 días hábiles.</p>
+      <p><strong>Excepciones:</strong> No se aceptan devoluciones de productos abiertos o con embalaje dañado por el cliente.</p>`
+    }
+  };
+  const c = contenidos[tipo];
+  if (!c) return;
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML = `<div style="background:#fff;border-radius:12px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;padding:28px 24px;position:relative">
+    <button onclick="this.closest('[style*=fixed]').remove()" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:18px;cursor:pointer;color:#6B7280">✕</button>
+    <h2 style="font-size:17px;font-weight:700;margin-bottom:16px;color:#111">${c.titulo}</h2>
+    <div style="font-size:13px;color:#374151;line-height:1.7">${c.texto}</div>
+  </div>`;
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
 }
 
 // ---- SLIDER ----
