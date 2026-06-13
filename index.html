@@ -4432,7 +4432,12 @@ function mostrarUsuarioLogueado(user) {
       </div>
     </div>`;
   const sm = document.getElementById('sidemenuCuenta');
-  if (sm) { sm.textContent = '👤 ' + iniciales; sm.onclick = (e) => { toggleUserDropdown(); cerrarMenu(); e.preventDefault(); }; }
+  if (sm) {
+    sm.outerHTML = `
+      <a href="#" onclick="abrirPerfil();cerrarMenu();return false;">👤 Mi Perfil</a>
+      <a href="#" id="sidemenuCuenta" onclick="mostrarVistaFavoritos();cerrarMenu();return false;">🤍 Mis Favoritos</a>
+      <a href="#" onclick="cerrarSesion();cerrarMenu();return false;" style="color:#DC2626">Cerrar sesión</a>`;
+  }
 }
 
 function mostrarBtnLogin() {
@@ -4442,7 +4447,9 @@ function mostrarBtnLogin() {
     <span class="cuenta-texto">Mi cuenta</span>
   </button>`;
   const sm = document.getElementById('sidemenuCuenta');
-  if (sm) { sm.textContent = '👤 Mi cuenta'; sm.onclick = (e) => { abrirAuth(); cerrarMenu(); e.preventDefault(); }; }
+  if (sm) {
+    sm.outerHTML = `<a href="#" id="sidemenuCuenta" onclick="abrirAuth();cerrarMenu();return false;">👤 Mi cuenta</a>`;
+  }
 }
 
 // ---- CALIFICACIONES ----
