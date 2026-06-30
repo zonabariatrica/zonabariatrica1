@@ -605,6 +605,66 @@ header {
 }
 .sabor-pill.active { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
 
+/* SABOR POPUP */
+.sp-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  z-index: 850; align-items: center; justify-content: center; padding: 20px;
+}
+.sp-overlay.open { display: flex; }
+.sp-box {
+  background: var(--surface); border-radius: var(--r); width: 100%; max-width: 360px;
+  box-shadow: var(--shadow-lg); overflow: hidden;
+}
+.sp-header {
+  background: var(--dark); color: white; padding: 14px 16px;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  border-bottom: 2px solid var(--blue);
+}
+.sp-header-title { font-size: 13px; font-weight: 700; }
+.sp-header-nombre { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 3px; }
+.sp-close { background: none; border: none; color: rgba(255,255,255,0.65); font-size: 20px; cursor: pointer; line-height: 1; flex-shrink: 0; }
+.sp-body { padding: 16px; }
+.sp-instruccion { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
+.sp-sabor-fila {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 0; border-bottom: 1px solid var(--border-light);
+}
+.sp-sabor-fila:last-of-type { border-bottom: none; }
+.sp-sabor-nombre { font-size: 13px; font-weight: 600; color: var(--text); }
+.sp-qty-ctrl { display: flex; align-items: center; gap: 10px; }
+.sp-qty-btn {
+  width: 32px; height: 32px; border: 1.5px solid var(--border); background: var(--bg);
+  border-radius: var(--r-sm); font-size: 17px; cursor: pointer; font-weight: 600; color: var(--text);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.sp-qty-btn:hover { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+.sp-qty-num { font-size: 15px; font-weight: 700; min-width: 24px; text-align: center; }
+.sp-total-bar {
+  margin-top: 12px; padding: 9px 12px; background: var(--blue-light);
+  border-radius: var(--r-sm); border-left: 3px solid var(--blue);
+  font-size: 12px; color: var(--blue); font-weight: 600;
+}
+.sp-grupo { margin-bottom: 13px; }
+.sp-grupo-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+.sp-pack-qty-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 14px; border-top: 1.5px solid var(--border); margin-top: 4px;
+}
+.sp-pack-qty-label { font-size: 13px; font-weight: 600; color: var(--text); }
+.sp-footer { padding: 14px 16px; background: var(--bg); display: flex; flex-direction: column; gap: 8px; }
+.sp-btn-ok {
+  width: 100%; background: var(--blue); color: white; border: none;
+  border-radius: var(--r-sm); padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: background 0.15s;
+}
+.sp-btn-ok:hover { background: var(--blue-dark); }
+.sp-btn-cancel {
+  width: 100%; background: none; color: var(--text-muted); border: 1.5px solid var(--border);
+  border-radius: var(--r-sm); padding: 9px; font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
 /* MODAL */
 .modal-overlay {
   display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
@@ -2232,6 +2292,24 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
 </div>
 
 
+<!-- SABOR POPUP -->
+<div class="sp-overlay" id="spOverlay" onclick="if(event.target===this)cerrarSaborPopup()">
+  <div class="sp-box">
+    <div class="sp-header">
+      <div>
+        <div class="sp-header-title">&#x1F6D2; Confirma los sabores de tu pedido</div>
+        <div class="sp-header-nombre" id="spNombre"></div>
+      </div>
+      <button class="sp-close" onclick="cerrarSaborPopup()">&#x2715;</button>
+    </div>
+    <div class="sp-body" id="spBody"></div>
+    <div class="sp-footer">
+      <button class="sp-btn-ok" onclick="confirmarSaborPopup()">Agregar a cotizaci&#xF3;n</button>
+      <button class="sp-btn-cancel" onclick="cerrarSaborPopup()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
@@ -3611,23 +3689,150 @@ function obtenerNotasSabor() {
   }).join(' · ');
 }
 
-function agregarACotizacion(id, silencioso = false) {
+// ---- SABOR POPUP ----
+let _spId = null;
+let _spTipo = null;
+let _spQtyMap = {};
+let _spPackQty = 1;
+
+function mostrarSaborPopup(id) {
   const prod = productos.find(x => x.id === id);
-  const idx = carrito.findIndex(i => i.id === id);
+  if (!prod) return;
+  _spId = id;
+  _spQtyMap = {};
+  _spPackQty = 1;
+  document.getElementById('spNombre').textContent = prod.nombre;
+  const body = document.getElementById('spBody');
+
+  if (prod.seleccionSabor && prod.seleccionSabor.length) {
+    _spTipo = 'seleccionSabor';
+    body.innerHTML =
+      '<p class="sp-instruccion">Elige el sabor de cada producto del pack, luego indica cu\xE1ntos packs quieres.</p>' +
+      prod.seleccionSabor.map((g, i) =>
+        '<div class="sp-grupo">' +
+          '<div class="sp-grupo-label">' + g.label + '</div>' +
+          '<div class="sabor-pills" data-sp-grupo="' + i + '">' +
+            g.sabores.map((s, j) =>
+              '<button class="sabor-pill' + (j === 0 ? ' active' : '') + '" onclick="spElegirGrupo(this,' + i + ')">' + s + '</button>'
+            ).join('') +
+          '</div>' +
+        '</div>'
+      ).join('') +
+      '<div class="sp-pack-qty-row">' +
+        '<span class="sp-pack-qty-label">Cantidad de packs</span>' +
+        '<div class="sp-qty-ctrl">' +
+          '<button class="sp-qty-btn" onclick="spAjustarPackQty(-1)">−</button>' +
+          '<span class="sp-qty-num" id="spPackQtyNum">1</span>' +
+          '<button class="sp-qty-btn" onclick="spAjustarPackQty(1)">+</button>' +
+        '</div>' +
+      '</div>';
+  } else if (prod.sabores && prod.sabores.length > 1) {
+    _spTipo = 'sabores';
+    prod.sabores.forEach(s => { _spQtyMap[s] = 0; });
+    body.innerHTML =
+      '<p class="sp-instruccion">Indica cu\xE1ntas unidades de cada sabor quieres agregar.</p>' +
+      prod.sabores.map(s =>
+        '<div class="sp-sabor-fila">' +
+          '<span class="sp-sabor-nombre">' + s + '</span>' +
+          '<div class="sp-qty-ctrl">' +
+            '<button class="sp-qty-btn" onclick="spAjustar(\'' + s + '\',-1)">−</button>' +
+            '<span class="sp-qty-num" id="spQty_' + s + '">0</span>' +
+            '<button class="sp-qty-btn" onclick="spAjustar(\'' + s + '\',1)">+</button>' +
+          '</div>' +
+        '</div>'
+      ).join('') +
+      '<div class="sp-total-bar">Total: <span id="spTotalQty">0</span> unidad(es)</div>';
+  } else {
+    _agregarDirecto(id, false);
+    return;
+  }
+
+  document.getElementById('spOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function spAjustar(sabor, delta) {
+  _spQtyMap[sabor] = Math.max(0, (_spQtyMap[sabor] || 0) + delta);
+  document.getElementById('spQty_' + sabor).textContent = _spQtyMap[sabor];
+  const total = Object.values(_spQtyMap).reduce(function(a, b) { return a + b; }, 0);
+  document.getElementById('spTotalQty').textContent = total;
+}
+
+function spElegirGrupo(btn, grupoIdx) {
+  document.querySelector('.sabor-pills[data-sp-grupo="' + grupoIdx + '"]')
+    .querySelectorAll('.sabor-pill').forEach(function(p) { p.classList.remove('active'); });
+  btn.classList.add('active');
+}
+
+function spAjustarPackQty(delta) {
+  _spPackQty = Math.max(1, _spPackQty + delta);
+  document.getElementById('spPackQtyNum').textContent = _spPackQty;
+}
+
+function confirmarSaborPopup() {
+  const prod = productos.find(function(x) { return x.id === _spId; });
+  if (!prod) return;
+  let notas = '';
+  let qty = 1;
+
+  if (_spTipo === 'sabores') {
+    qty = Object.values(_spQtyMap).reduce(function(a, b) { return a + b; }, 0);
+    if (qty < 1) { alert('Agrega al menos 1 unidad antes de confirmar.'); return; }
+    notas = Object.entries(_spQtyMap)
+      .filter(function(e) { return e[1] > 0; })
+      .map(function(e) { return e[1] > 1 ? e[1] + '\xD7 ' + e[0] : e[0]; })
+      .join(' \xB7 ');
+  } else {
+    qty = _spPackQty;
+    const grupos = document.querySelectorAll('#spBody .sabor-pills[data-sp-grupo]');
+    notas = Array.from(grupos).map(function(g, i) {
+      const active = g.querySelector('.sabor-pill.active');
+      return prod.seleccionSabor[i].label + ': ' + (active ? active.textContent : '—');
+    }).join(' \xB7 ');
+  }
+
+  const idx = carrito.findIndex(function(i) { return i.id === _spId; });
+  if (idx >= 0) { carrito[idx].qty += qty; carrito[idx].notas = notas; }
+  else carrito.push({ id: _spId, qty: qty, notas: notas });
+
+  cerrarSaborPopup();
+  actualizarCartUI();
+  abrirCarrito();
+}
+
+function cerrarSaborPopup() {
+  document.getElementById('spOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  _spId = null;
+}
+
+function _agregarDirecto(id, silencioso) {
+  const prod = productos.find(function(x) { return x.id === id; });
+  const idx = carrito.findIndex(function(i) { return i.id === id; });
   let notas = '';
   if (prod && prod.sabores && prod.saborPredeterminado) notas = 'Sabor: ' + prod.saborPredeterminado;
   if (idx >= 0) carrito[idx].qty++;
-  else carrito.push({ id, qty: 1, notas });
+  else carrito.push({ id: id, qty: 1, notas: notas });
   actualizarCartUI();
   if (silencioso) {
     const badge = document.getElementById('floatBadge');
     badge.classList.remove('pulsar');
     void badge.offsetWidth;
     badge.classList.add('pulsar');
-    badge.addEventListener('animationend', () => badge.classList.remove('pulsar'), { once: true });
+    badge.addEventListener('animationend', function() { badge.classList.remove('pulsar'); }, { once: true });
   } else {
     abrirCarrito();
   }
+}
+// ---- FIN SABOR POPUP ----
+
+function agregarACotizacion(id, silencioso = false) {
+  const prod = productos.find(x => x.id === id);
+  if (prod && ((prod.seleccionSabor && prod.seleccionSabor.length) || (prod.sabores && prod.sabores.length > 1))) {
+    mostrarSaborPopup(id);
+    return;
+  }
+  _agregarDirecto(id, silencioso);
 }
 
 function agregarDesdeModalCot() {
