@@ -3061,6 +3061,22 @@ function normalizar(str) {
   return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
+const STOPWORDS_BUSQUEDA = new Set(['de','del','la','el','los','las','en','con','sin','para','por','y','o','al','un','una','unos','unas']);
+
+function tokenizar(qNormalizado) {
+  return qNormalizado.split(/[^a-z0-9ñ]+/).filter(w => w && !STOPWORDS_BUSQUEDA.has(w));
+}
+
+function textoBuscableProducto(p) {
+  return normalizar([p.nombre, p.desc, p.marca, ...(p.tags || [])].join(' ')).replace(/,/g, '');
+}
+
+function coincideProducto(p, tokens, q) {
+  if (!tokens.length) return textoBuscableProducto(p).includes(q);
+  const texto = textoBuscableProducto(p);
+  return tokens.every(t => texto.includes(t));
+}
+
 function buscar(texto) {
   const q = normalizar(texto.trim());
   document.getElementById('searchClear').style.display = q ? 'block' : 'none';
@@ -3070,6 +3086,7 @@ function buscar(texto) {
 
 function mostrarSugerencias(q) {
   const items = [];
+  const tokens = tokenizar(q);
 
   // Sugerencias de marca primero
   const marcasDef = [
@@ -3085,25 +3102,16 @@ function mostrarSugerencias(q) {
     }
   });
 
-  // Sugerencias de producto y etiquetas
+  // Sugerencias de producto: coincide si el nombre contiene todas las palabras buscadas (en cualquier orden)
   const visto = new Set();
   productos.forEach(p => {
-    if (normalizar(p.nombre).includes(q) && !visto.has(p.nombre)) {
+    if (coincideProducto(p, tokens, q) && !visto.has(p.nombre)) {
       visto.add(p.nombre);
       items.push({
         texto: p.nombre, etiqueta: p.marca,
         onclick: `seleccionarSugerencia('${p.nombre.replace(/'/g,"\\'")}')`
       });
     }
-    (p.tags || []).forEach(t => {
-      if (normalizar(t).includes(q) && !visto.has(t)) {
-        visto.add(t);
-        items.push({
-          texto: t, etiqueta: 'etiqueta',
-          onclick: `seleccionarSugerencia('${t.replace(/'/g,"\\'")}')`
-        });
-      }
-    });
   });
 
   const box = document.getElementById('searchSugerencias');
@@ -3133,12 +3141,8 @@ function ejecutarBusqueda(q, textoOriginal) {
   const tEl = document.getElementById('productos-titulo');
   if (tEl) tEl.textContent = '';
 
-  const principales = productos.filter(p =>
-    normalizar(p.nombre).includes(q) ||
-    normalizar(p.desc).includes(q) ||
-    normalizar(p.marca).includes(q) ||
-    (p.tags || []).some(t => normalizar(t).includes(q))
-  );
+  const tokens = tokenizar(q);
+  const principales = productos.filter(p => coincideProducto(p, tokens, q));
 
   const idsEncontrados = new Set(principales.map(p => p.id));
   const catPrincipal = principales.length ? principales[0].cat : null;
