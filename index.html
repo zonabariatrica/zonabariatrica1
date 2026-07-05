@@ -2322,6 +2322,14 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
       <a class="footer-nav-link" href="#" onclick="mostrarBlog();return false;">BariBlog</a>
       <a class="footer-nav-link" href="#" onclick="mostrarNosotros();return false;">Quiénes somos</a>
     </div>
+    <!-- Col: Categorías (páginas indexables) -->
+    <div>
+      <div class="footer-col-title">Categorías</div>
+      <a class="footer-nav-link" href="/proteinas">Proteínas</a>
+      <a class="footer-nav-link" href="/vitaminas">Vitaminas &amp; Minerales</a>
+      <a class="footer-nav-link" href="/colageno-y-fibra">Colágeno &amp; Fibra</a>
+      <a class="footer-nav-link" href="/packs">Packs</a>
+    </div>
     <!-- Col 3: Despacho y envíos -->
     <div style="width:100%">
       <div class="footer-col-title" style="text-align:center">Despacho y envíos</div>
@@ -4281,6 +4289,14 @@ let vistaDesktop = 'normal';
 let vistaMobile = window.innerWidth <= 600 ? '2col' : '1col';
 
 renderizar('todos', null);
+// Filtro por URL (?cat=proteina) para llegar desde las páginas de categoría
+(function() {
+  const catURL = new URLSearchParams(location.search).get('cat');
+  if (catURL && ['proteina','vitaminas','colageno','pack','oferta','todos'].indexOf(catURL) !== -1) {
+    filtrar(catURL);
+    setTimeout(scrollProductos, 200);
+  }
+})();
 // Sincronizar botón activo de vista según pantalla inicial
 (function() {
   const mob2 = document.getElementById('vBtnMob2');
