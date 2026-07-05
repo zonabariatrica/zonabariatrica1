@@ -9,7 +9,7 @@
 <meta name="keywords" content="suplementos bariátricos, vitaminas bariátricas, proteína para bariátrica, bypass gástrico suplementos, manga gástrica vitaminas, colágeno bariátrico, suplementos post operatorio bariátrico">
 <meta name="robots" content="index, follow">
 <meta name="author" content="Zona Bariátrica">
-<link rel="canonical" href="https://www.zonabariatrica.com">
+<link rel="canonical" href="https://zonabariatrica.com">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Zona Bariátrica — Suplementos para Pacientes Bariátricos">
@@ -21,8 +21,8 @@
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Zona Bariátrica",
-  "url": "https://www.zonabariatrica.com",
-  "logo": "https://www.zonabariatrica.com/img/logo.png",
+  "url": "https://zonabariatrica.com",
+  "logo": "https://zonabariatrica.com/img/logo.png",
   "description": "Tienda especializada en suplementos vitamínicos y proteicos para pacientes bariátricos.",
   "contactPoint": {
     "@type": "ContactPoint",
@@ -41,12 +41,12 @@
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Zona Bariátrica",
-  "url": "https://www.zonabariatrica.com",
+  "url": "https://zonabariatrica.com",
   "description": "Suplementos especializados para pacientes bariátricos — vitaminas, proteínas, colágeno y packs.",
   "inLanguage": "es",
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "https://www.zonabariatrica.com/?q={search_term_string}",
+    "target": "https://zonabariatrica.com/?q={search_term_string}",
     "query-input": "required name=search_term_string"
   }
 }
@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/zonabariatrica/zonabariatrica1/main/img/logo-og.png" />
 <meta property="og:image:width" content="1080" />
 <meta property="og:image:height" content="1080" />
-<meta property="og:url" content="https://www.zonabariatrica.com" />
+<meta property="og:url" content="https://zonabariatrica.com" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Zona Bariátrica" />
 <!-- Google Analytics -->
@@ -4274,7 +4274,7 @@ function aplicarOrden() {
 function compartirProducto() {
   const p = productos.find(x => x.id === currentModalId);
   if (!p) return;
-  const url = `https://www.zonabariatrica.com/#producto/${p.id}`;
+  const url = `https://zonabariatrica.com/#producto/${p.id}`;
   const msg = `¡Mira este producto de *Zona Bariátrica*!\n\n*${p.nombre}*\n${p.desc}\n\nPrecio: S/ ${p.precio}\n\n🔗 ${url}`;
   if (navigator.share) {
     navigator.share({ title: p.nombre, text: p.desc, url });
@@ -4756,7 +4756,7 @@ async function hacerRegistro() {
   const { error } = await supa.auth.signUp({
     email, password: pass,
     options: {
-      emailRedirectTo: 'https://www.zonabariatrica.com',
+      emailRedirectTo: 'https://zonabariatrica.com',
       data: { name: nombre + ' ' + apellido, full_name: nombre + ' ' + apellido, nombre, apellido, celular, tipo_documento: tipoDoc, numero_documento: numDoc }
     }
   });
