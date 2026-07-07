@@ -444,6 +444,11 @@ header {
   color: white; background: #DC2626; padding: 3px 9px;
   border-radius: var(--r-pill); display: inline-block; width: fit-content; letter-spacing: 0.3px;
 }
+.escarapela-badge {
+  position: absolute; top: 6px; left: 6px; z-index: 2;
+  width: 42px; height: auto; pointer-events: none;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+}
 .card-img { width: 100%; height: 240px; object-fit: contain; background: #fff; display: block; padding: 8px; }
 .card-body { padding: 14px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
 .badge-pack {
@@ -2747,7 +2752,7 @@ const productos = [
     seleccionSabor:[{label:"Proteína Líquida 1",sabores:["Maracumango","Fresa"]},{label:"Proteína Líquida 2",sabores:["Maracumango","Fresa"]}],
     uso:"Consume según indicación de tu equipo médico. Ideal para la etapa post operatoria.", tn:null },
 
-  { id:"oferta2", tipo:"oferta", marcaTipo:"bn", cat:"oferta", destacado:true, marca:"Bari&Nutrition",
+  { id:"oferta2", tipo:"oferta", marcaTipo:"bn", cat:"oferta", destacado:true, fiestas:true, marca:"Bari&Nutrition",
     nombre:"2 Proteínas en Polvo (Whey)",
     desc:"Promo de julio: llévate 2 Whey Protein de 1.5kg. 30g de proteína por servicio, sin gluten, sin lactosa y 0% azúcar.",
     incluye:"Whey Protein 1.5kg x2 · Sabores a elección: Vainilla o Chocolate",
@@ -3588,10 +3593,19 @@ function cardMiniHTML(p) {
 
 const HEART_SVG = `<svg viewBox="0 0 24 24"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>`;
 
+const ESCARAPELA_SVG = `<svg class="escarapela-badge" viewBox="0 0 64 84" aria-label="Fiestas Patrias Perú">
+  <polygon points="22,40 10,76 20,69 27,80 34,46" fill="#D91023"/>
+  <polygon points="42,40 54,76 44,69 37,80 30,46" fill="#D91023"/>
+  <circle cx="32" cy="26" r="24" fill="#D91023"/>
+  <circle cx="32" cy="26" r="16.5" fill="#fff"/>
+  <circle cx="32" cy="26" r="9" fill="#D91023"/>
+</svg>`;
+
 function cardHTML(p) {
   const pack = p.tipo === 'pack';
   const oferta = p.tipo === 'oferta';
   return `<div class="card${pack?' pack':''}${oferta?' oferta':''}">
+    ${p.fiestas ? ESCARAPELA_SVG : ''}
     <button class="fav-btn${favoritosSet.has(p.id)?' activo':''}" data-id="${p.id}" onclick="toggleFavorito('${p.id}',event)" title="Favorito">${HEART_SVG}</button>
     <img class="card-img" src="${p.img}" alt="${p.nombre}"
       onerror="this.style.background='#e8eeff'" onclick="abrirModal('${p.id}')" style="cursor:pointer">
