@@ -1156,6 +1156,21 @@ footer {
 
 /* BARIBLOG */
 .blog-section { padding: 40px 32px 56px; display: none; }
+.blog-chips {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  margin: 20px auto 0; max-width: 720px;
+}
+.blog-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  flex-shrink: 0; padding: 8px 18px; font-size: 13px; font-weight: 600;
+  border: 1.5px solid var(--border); border-radius: var(--r-pill);
+  background: var(--surface); color: var(--text-muted);
+  cursor: pointer; transition: all 0.15s; font-family: 'Plus Jakarta Sans', sans-serif;
+  white-space: nowrap;
+}
+.blog-chip:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+.blog-chip.active { background: var(--text); color: #fff; border-color: var(--text); }
+.blog-chip .chip-ico { font-size: 15px; line-height: 1; }
 .blog-header { text-align: center; margin-bottom: 32px; }
 .blog-titulo { font-size: 28px; font-weight: 800; color: var(--text); margin-bottom: 8px; font-family: 'Plus Jakarta Sans', sans-serif; }
 .blog-subtitulo { font-size: 15px; color: var(--text-muted); }
@@ -2064,11 +2079,18 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
   <div class="blog-header">
     <h2 class="blog-titulo">BariBlog</h2>
     <p class="blog-subtitulo">Todo lo que necesitas saber sobre tu vida bariátrica</p>
+    <div class="blog-chips" id="blogChips">
+      <button class="blog-chip active" data-blogchip="todos" onclick="filtrarBlog('todos')">Todos</button>
+      <button class="blog-chip" data-blogchip="nutricion" onclick="filtrarBlog('nutricion')"><span class="chip-ico">🥗</span>Nutrición</button>
+      <button class="blog-chip" data-blogchip="psicologia" onclick="filtrarBlog('psicologia')"><span class="chip-ico">🧠</span>Psicología</button>
+      <button class="blog-chip" data-blogchip="coach" onclick="filtrarBlog('coach')"><span class="chip-ico">💪</span>Coach</button>
+      <button class="blog-chip" data-blogchip="suplementacion" onclick="filtrarBlog('suplementacion')"><span class="chip-ico">💊</span>Suplementación</button>
+    </div>
   </div>
   <div class="blog-grid">
 
     <!-- ARTÍCULO REAL -->
-    <div class="blog-card">
+    <div class="blog-card" data-blogcat="suplementacion">
       <div class="blog-card-img" style="background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 55%, #00D68F 100%); flex-direction:column; gap:6px;">
         <div style="font-size:52px;">💊</div>
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,0.85);">Suplementación</div>
@@ -2083,7 +2105,7 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
     </div>
 
     <!-- ARTÍCULO CAÍDA DE CABELLO -->
-    <div class="blog-card">
+    <div class="blog-card" data-blogcat="suplementacion">
       <div class="blog-card-img" style="background:linear-gradient(135deg,#7C3AED 0%,#A855F7 55%,#EC4899 100%);flex-direction:column;gap:6px;">
         <div style="font-size:52px;">💇</div>
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,0.85);">Cabello &amp; Nutrición</div>
@@ -2098,7 +2120,7 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
     </div>
 
     <!-- ARTÍCULO ETAPAS -->
-    <div class="blog-card">
+    <div class="blog-card" data-blogcat="nutricion">
       <div class="blog-card-img" style="background:linear-gradient(135deg,#1E3A8A 0%,#0EA5E9 55%,#00D68F 100%);flex-direction:column;gap:6px;">
         <div style="font-size:52px;">🗓️</div>
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,0.85);">Guía por Etapas</div>
@@ -2109,6 +2131,24 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
         <div class="blog-card-titulo">Etapas post-operatorias: qué comer y qué tomar en cada fase</div>
         <div class="blog-card-desc">Desde la fase hospitalaria hasta el largo plazo. Conoce qué suplementos y alimentos corresponden a cada etapa de tu proceso bariátrico.</div>
         <button class="blog-card-btn" onclick="abrirArticuloEtapas()">Leer guía completa →</button>
+      </div>
+    </div>
+
+    <!-- PRÓXIMAMENTE: PSICOLOGÍA -->
+    <div class="blog-card-prox" data-blogcat="psicologia">
+      <div class="blog-card-prox-img">🧠</div>
+      <div class="blog-card-prox-body">
+        <span class="blog-card-prox-badge">Próximamente</span>
+        <div class="blog-card-prox-titulo">Psicología bariátrica: la relación con la comida después de la cirugía</div>
+      </div>
+    </div>
+
+    <!-- PRÓXIMAMENTE: COACH -->
+    <div class="blog-card-prox" data-blogcat="coach">
+      <div class="blog-card-prox-img">💪</div>
+      <div class="blog-card-prox-body">
+        <span class="blog-card-prox-badge">Próximamente</span>
+        <div class="blog-card-prox-titulo">Coach bariátrico: hábitos y motivación para sostener tu nueva vida</div>
       </div>
     </div>
 
@@ -3044,6 +3084,15 @@ function mostrarBlog() {
   const header = document.querySelector('header');
   const offset = header ? header.offsetHeight + 8 : 8;
   window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - offset, behavior: 'smooth' });
+}
+
+function filtrarBlog(cat) {
+  document.querySelectorAll('#blogChips .blog-chip').forEach(b => {
+    b.classList.toggle('active', b.dataset.blogchip === cat);
+  });
+  document.querySelectorAll('.blog-grid [data-blogcat]').forEach(card => {
+    card.style.display = (cat === 'todos' || card.dataset.blogcat === cat) ? '' : 'none';
+  });
 }
 
 function ocultarBlog() {
