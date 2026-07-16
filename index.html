@@ -1612,6 +1612,10 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
   </div>
   <div id="cartAhorro" style="display:none;background:#f0fdf4;border-top:1px solid #bbf7d0;padding:10px 18px;font-size:12.5px;color:#15803d;font-weight:500;line-height:1.5"></div>
   <div class="cart-footer" id="cartFooter" style="display:none">
+    <div id="cartDescuentoFila" style="display:none;justify-content:space-between;font-size:13px;font-weight:600;color:#15803d;margin-bottom:8px;">
+      <span id="cartDescuentoLabel">Descuento Julio Bariátrico</span>
+      <span id="cartDescuentoVal">-S/ 0</span>
+    </div>
     <div class="cart-subtotal">
       <span data-i18n="cart_total">Total estimado</span>
       <span class="cart-subtotal-val" id="cartSubtotal">S/ 0</span>
@@ -1715,6 +1719,9 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
         <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-muted);margin-bottom:4px;">
           <span>Subtotal</span><span id="formSubtotal">S/ 0</span>
         </div>
+        <div id="formDescuentoFila" style="display:none;justify-content:space-between;font-size:13px;font-weight:600;color:#15803d;margin-bottom:4px;">
+          <span id="formDescuentoLabel">Descuento Julio Bariátrico</span><span id="formDescuentoVal">-S/ 0</span>
+        </div>
         <div id="formRecargoFila" style="display:none;justify-content:space-between;font-size:13px;color:#dc2626;margin-bottom:4px;">
           <span>Recargo tarjeta (4%)</span><span id="formRecargoVal">S/ 0.00</span>
         </div>
@@ -1747,6 +1754,10 @@ src="https://www.facebook.com/tr?id=1281144750767995&ev=PageView&noscript=1"
       <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-muted);padding:3px 0;">
         <span>Subtotal productos</span>
         <span id="resumenSubtotal">S/ 0</span>
+      </div>
+      <div id="resumenDescuentoFila" style="display:none;justify-content:space-between;font-size:13px;font-weight:600;color:#15803d;padding:3px 0;">
+        <span id="resumenDescuentoLabel">Descuento Julio Bariátrico</span>
+        <span id="resumenDescuentoVal">-S/ 0</span>
       </div>
       <div id="resumenRecargoFila" style="display:none;justify-content:space-between;font-size:13px;color:#dc2626;padding:3px 0;">
         <span>Recargo Izipay (4%)</span>
@@ -3948,9 +3959,45 @@ function calcularSubtotal() {
   }, 0);
 }
 
+/* ── PROMO JULIO BARIÁTRICO 2026 ──────────────────────────────
+   Descuento automático sobre productos individuales Bari&Nutrition.
+   NO aplica a: LVL Drink, packs armados, ni ofertas 2x (esas ya
+   traen su propio precio especial y no se acumulan).
+   Se apaga sola al terminar julio 2026 — no hay que tocar nada. */
+const PROMO_JULIO = {
+  nombre: 'Descuento Julio Bariátrico',
+  desde: '2026-07-01',
+  hasta: '2026-07-31',
+  tramos: [ { min: 3, desc: 25 }, { min: 2, desc: 15 } ]
+};
+
+function promoJulioVigente() {
+  const hoy = new Date();
+  const f = hoy.getFullYear() + '-' +
+            String(hoy.getMonth() + 1).padStart(2, '0') + '-' +
+            String(hoy.getDate()).padStart(2, '0');
+  return f >= PROMO_JULIO.desde && f <= PROMO_JULIO.hasta;
+}
+
+// Solo tipo "bn" = individuales Bari&Nutrition. Los packs son tipo "pack"
+// y las ofertas 2x son tipo "oferta", así que quedan fuera por definición.
+function contarUnidadesBNIndividuales() {
+  return carrito.reduce((s, i) => {
+    const p = productos.find(x => x.id === i.id);
+    return s + (p && p.tipo === 'bn' ? i.qty : 0);
+  }, 0);
+}
+
+function calcularDescuentoJulio() {
+  if (!promoJulioVigente()) return 0;
+  const u = contarUnidadesBNIndividuales();
+  const tramo = PROMO_JULIO.tramos.find(t => u >= t.min);
+  return tramo ? tramo.desc : 0;
+}
+
 function actualizarCartUI() {
   const total = carrito.reduce((s, i) => s + i.qty, 0);
-  const sub = calcularSubtotal();
+  const sub = calcularSubtotal() - calcularDescuentoJulio();
   const badge = document.getElementById('floatBadge');
   badge.textContent = total > 0 ? total + ' · S/' + sub : '0';
   badge.classList.toggle('visible', total > 0);
@@ -3984,7 +4031,16 @@ function renderizarCartItems() {
     return;
   }
   footer.style.display = 'block';
-  subtotalEl.textContent = 'S/ ' + calcularSubtotal();
+  const descJulio = calcularDescuentoJulio();
+  const descFila = document.getElementById('cartDescuentoFila');
+  if (descJulio > 0) {
+    descFila.style.display = 'flex';
+    document.getElementById('cartDescuentoLabel').textContent = PROMO_JULIO.nombre;
+    document.getElementById('cartDescuentoVal').textContent = '-S/ ' + descJulio;
+  } else {
+    descFila.style.display = 'none';
+  }
+  subtotalEl.textContent = 'S/ ' + (calcularSubtotal() - descJulio);
 
   const totalAhorro = calcularAhorro();
   const ahorroEl = document.getElementById('cartAhorro');
@@ -4112,6 +4168,8 @@ function actualizarTotalForm() {
   const metodo = document.querySelector('input[name="formMetodoPago"]:checked').value;
   const esProv = document.querySelector('input[name="zonaEnvio"]:checked')?.value === 'provincia';
   const sub = calcularSubtotal();
+  const descJulio = calcularDescuentoJulio();
+  const base = sub - descJulio;
   const traslado = esProv ? 10 : 0;
   const recargoFila = document.getElementById('formRecargoFila');
   const recargoVal = document.getElementById('formRecargoVal');
@@ -4120,18 +4178,26 @@ function actualizarTotalForm() {
   const labelYape = document.getElementById('formLabelYape');
   const labelIzipay = document.getElementById('formLabelIzipay');
   subtotalEl.textContent = 'S/ ' + sub;
+  const descFila = document.getElementById('formDescuentoFila');
+  if (descJulio > 0) {
+    descFila.style.display = 'flex';
+    document.getElementById('formDescuentoLabel').textContent = PROMO_JULIO.nombre;
+    document.getElementById('formDescuentoVal').textContent = '-S/ ' + descJulio;
+  } else {
+    descFila.style.display = 'none';
+  }
   if (metodo === 'tarjeta') {
-    const recargo = Math.round((sub + traslado) * 0.04 * 100) / 100;
+    const recargo = Math.round((base + traslado) * 0.04 * 100) / 100;
     recargoFila.style.display = 'flex';
     recargoVal.textContent = 'S/ ' + recargo.toFixed(2);
-    totalEl.textContent = 'S/ ' + (sub + traslado + recargo).toFixed(2);
+    totalEl.textContent = 'S/ ' + (base + traslado + recargo).toFixed(2);
     labelYape.style.borderColor = 'var(--border)';
     labelYape.style.background = 'var(--surface)';
     labelIzipay.style.borderColor = 'var(--blue)';
     labelIzipay.style.background = 'var(--blue-light)';
   } else {
     recargoFila.style.display = 'none';
-    totalEl.textContent = 'S/ ' + (sub + traslado);
+    totalEl.textContent = 'S/ ' + (base + traslado);
     labelYape.style.borderColor = 'var(--blue)';
     labelYape.style.background = 'var(--blue-light)';
     labelIzipay.style.borderColor = 'var(--border)';
@@ -4176,24 +4242,33 @@ function mostrarResumenPago() {
 
 function actualizarMetodoPago() {
   const metodo = document.querySelector('input[name="metodoPago"]:checked').value;
-  const sub = calcularSubtotal();
+  const descJulio = calcularDescuentoJulio();
+  const base = calcularSubtotal() - descJulio;
   const recargoFila = document.getElementById('resumenRecargoFila');
   const recargoVal = document.getElementById('resumenRecargoVal');
   const totalEl = document.getElementById('resumenTotal');
   const labelYape = document.getElementById('labelYape');
   const labelIzipay = document.getElementById('labelIzipay');
+  const descFila = document.getElementById('resumenDescuentoFila');
+  if (descJulio > 0) {
+    descFila.style.display = 'flex';
+    document.getElementById('resumenDescuentoLabel').textContent = PROMO_JULIO.nombre;
+    document.getElementById('resumenDescuentoVal').textContent = '-S/ ' + descJulio;
+  } else {
+    descFila.style.display = 'none';
+  }
   if (metodo === 'izipay') {
-    const recargo = Math.round(sub * 0.04 * 100) / 100;
+    const recargo = Math.round(base * 0.04 * 100) / 100;
     recargoFila.style.display = 'flex';
     recargoVal.textContent = 'S/ ' + recargo.toFixed(2);
-    totalEl.textContent = 'S/ ' + (sub + recargo).toFixed(2);
+    totalEl.textContent = 'S/ ' + (base + recargo).toFixed(2);
     labelYape.style.borderColor = 'var(--border)';
     labelYape.style.background = 'var(--surface)';
     labelIzipay.style.borderColor = 'var(--blue)';
     labelIzipay.style.background = 'var(--blue-light)';
   } else {
     recargoFila.style.display = 'none';
-    totalEl.textContent = 'S/ ' + sub;
+    totalEl.textContent = 'S/ ' + base;
     labelYape.style.borderColor = 'var(--blue)';
     labelYape.style.background = 'var(--blue-light)';
     labelIzipay.style.borderColor = 'var(--border)';
@@ -4222,12 +4297,15 @@ function enviarCotizacion(nombre, dni, direccion, distrito, correo, metodo, zona
     return linea;
   }).join('\n');
   const sub = calcularSubtotal();
+  const descJulio = calcularDescuentoJulio();
+  const base = sub - descJulio;
   const esProv = zona === 'provincia';
   const traslado = esProv ? 10 : 0;
   const esTarjeta = metodo === 'tarjeta';
-  const recargo = esTarjeta ? Math.round((sub + traslado) * 0.04 * 100) / 100 : 0;
-  const total = sub + traslado + recargo;
+  const recargo = esTarjeta ? Math.round((base + traslado) * 0.04 * 100) / 100 : 0;
+  const total = base + traslado + recargo;
   const lineaTraslado = esProv ? `🚚 Traslado y embalaje (Shalom): S/ 10\n` : '';
+  const lineaDescuento = descJulio > 0 ? `🎁 ${PROMO_JULIO.nombre}: -S/ ${descJulio}\n` : '';
   let msg;
   if (esTarjeta) {
     msg =
@@ -4237,6 +4315,7 @@ function enviarCotizacion(nombre, dni, direccion, distrito, correo, metodo, zona
       `📧 Correo: ${correo}\n` +
       `📍 Dirección: ${direccion} — ${distrito} (${esProv ? 'PROVINCIA' : 'LIMA'})\n\n` +
       `📦 PRODUCTOS:\n${lineas}\n\n` +
+      `${lineaDescuento}` +
       `${lineaTraslado}` +
       `💰 TOTAL: S/ ${total.toFixed(2)} (incluye 4% por tarjeta)\n` +
       `💳 Pago: TARJETA\n\n` +
@@ -4249,6 +4328,7 @@ function enviarCotizacion(nombre, dni, direccion, distrito, correo, metodo, zona
       `📧 Correo: ${correo}\n` +
       `📍 Dirección: ${direccion} — ${distrito} (${esProv ? 'PROVINCIA' : 'LIMA'})\n\n` +
       `📦 PRODUCTOS:\n${lineas}\n\n` +
+      `${lineaDescuento}` +
       `${lineaTraslado}` +
       `💰 TOTAL: S/ ${total}\n` +
       `🟣 Pago: YAPE\n\n` +
